@@ -1,0 +1,58 @@
+<div class="page-details">
+    <div class="films " *ngIf="filmData.length>0">
+        <h1 class="text-success fw-bold">FILMS</h1>
+
+        <div class="row">
+            <div class="col-md-3" *ngFor="let film of filmData">
+                <mat-card class="film-card " appearance="outlined">
+                    <mat-card-header>
+                        <mat-card-title>{{film?.title}}</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p><span class="fw-bold">Director:</span> {{film?.director}}</p>
+                        <p><span class="fw-bold">Producer:</span> {{film?.producer}}</p>
+                        <p><span class="fw-bold">Release Date:</span> {{film?.release_date}}</p>
+                        <p class="overflow"><span class="fw-bold">Opening Crawl:</span> {{film?.opening_crawl}}</p>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+    <div class="py-4" *ngIf="vehiclesData.length>0">
+        <h1 class="text-success fw-bold">VEHICLES</h1>
+        <div class="row">
+            <div class="col-md-3" *ngFor="let vehicle of vehiclesData">
+                <mat-card class="film-card " appearance="outlined">
+                    <mat-card-header>
+                        <mat-card-title>{{vehicle?.name}}</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p><span class="fw-bold">Manufacturer:</span> {{vehicle?.manufacturer}}</p>
+                        <p><span class="fw-bold">Model:</span> {{vehicle?.model}}</p>
+                        <p><span class="fw-bold">Vehicle Class:</span> {{vehicle?.vehicle_class}}</p>
+                        <p><span class="fw-bold">Cargo Capacity:</span> {{vehicle?.cargo_capacity}}</p>
+                        <p><span class="fw-bold">Max Atmosphering Speed:</span> {{vehicle?.max_atmosphering_speed}}</p>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+    <div class="py-4" *ngIf="starshipsData.length >0">
+        <h1 class="text-success fw-bold">STARSHIPS</h1>
+        <div class="row">
+            <div class="col-md-3" *ngFor="let starship of starshipsData">
+                <mat-card class="film-card " appearance="outlined">
+                    <mat-card-header>
+                        <mat-card-title>{{starship?.name}}</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p><span class="fw-bold">Manufacturer:</span> {{starship?.manufacturer}}</p>
+                        <p><span class="fw-bold">Model:</span> {{starship?.model}}</p>
+                        <p><span class="fw-bold">starship Class:</span> {{starship?.vehicle_class}}</p>
+                        <p><span class="fw-bold">Cargo Capacity:</span> {{starship?.cargo_capacity}}</p>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

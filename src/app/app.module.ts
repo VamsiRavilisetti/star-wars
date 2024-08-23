@@ -14,6 +14,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { SideBarComponent } from './components/side-bar/side-bar.component';
+import { HeaderComponent } from './components/header/header.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,6 +26,7 @@ import { SideBarComponent } from './components/side-bar/side-bar.component';
     HomePageComponent,
     ProfilePageComponent,
     SideBarComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,7 +38,12 @@ import { SideBarComponent } from './components/side-bar/side-bar.component';
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    MatCardModule
+    MatCardModule,
+    MatToolbarModule,
+    MatExpansionModule,
+    MatCheckboxModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

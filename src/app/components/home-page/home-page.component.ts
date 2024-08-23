@@ -25,12 +25,31 @@ export class HomePageComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchData();
+    this.starWarsService.people$.subscribe(data => {
+      this.peopleData = data; // Update local data when observable emits new data
+      this.dataSource = new MatTableDataSource(this.peopleData);
+      this.dataSource.paginator = this.paginator;
+    });
   }
 
 
   fetchData() {
     this.starWarsService.getAllPeopleData().subscribe(response => {
       this.peopleData = response.results;
+      this.starWarsService.updatePeople(this.peopleData);
+      this.peopleData.forEach((element: any) => {
+        if (element.species.length == 0) {
+          element.species[0] = 'Human';
+        } else {
+          element.species.forEach((speciesUrl: any, index: number) => {
+            this.starWarsService.getItems(speciesUrl).subscribe((species: any) => {
+              element.species[index] = species.name;
+              element.species = [...element.species];
+            });
+          });
+
+        }
+      });
       this.dataSource = new MatTableDataSource(this.peopleData);
       this.dataSource.paginator = this.paginator;
     })

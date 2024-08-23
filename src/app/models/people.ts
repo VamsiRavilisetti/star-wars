@@ -16,3 +16,10 @@ export interface People {
     edited: string,
     url: string
 }
+export interface filterOptions {
+    film: any[],
+    species: any[],
+    vehicle: any[],
+    starShip: any[],
+    birthYear: any[]
+}

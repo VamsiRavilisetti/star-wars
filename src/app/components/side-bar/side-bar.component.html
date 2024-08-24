@@ -1,68 +1,85 @@
 <div *ngIf="filter">
     <div class="filters text-center">
-        <h2 class="text-success">FILTERS</h2>
-        <mat-accordion>
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title> Movie Name </mat-panel-title>
-                </mat-expansion-panel-header>
-                <div *ngFor="let film of filterOptions.film">
-                    <mat-checkbox (change)="changes(film,'film')" class="check-box">
-                        {{film.title}}
-                    </mat-checkbox>
-                </div>
-            </mat-expansion-panel>
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>Speices </mat-panel-title>
-                </mat-expansion-panel-header>
-                <div *ngFor="let species of filterOptions.species">
-                    <mat-checkbox (change)="changes(species.name,'species')" class="check-box">
-                        {{species.name}}
-                    </mat-checkbox>
-                </div>
-            </mat-expansion-panel>
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>Vehicle </mat-panel-title>
-                </mat-expansion-panel-header>
-                <section class="example-section">
-                    <div *ngFor="let vehicle of filterOptions.vehicle"> <mat-checkbox
-                            (change)="changes(vehicle.url,'vehicle')" class="check-box">
-                            {{vehicle.name}} </mat-checkbox>
-                    </div>
-                </section>
-            </mat-expansion-panel>
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>Birth Year </mat-panel-title>
-                </mat-expansion-panel-header>
-                <section class="example-section">
-                    <div *ngFor="let birth_year of filterOptions.birthYear"> <mat-checkbox
-                            (change)="changes(birth_year,'birth_year')" class="check-box">
-                            {{birth_year}} </mat-checkbox>
-                    </div>
-                </section>
-
-            </mat-expansion-panel>
-        </mat-accordion>
-        <button class="btn-primary btn" (click)="applyFilters()">Apply Filter</button>
+      <h2 class="text-success">FILTERS</h2>
+      <mat-accordion>
+  
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Movie Name </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div *ngFor="let film of filterOptions.film">
+            <mat-checkbox 
+              [checked]="filterChanges.film.has(film.title)" 
+              (change)="changes(film.title, 'film')" 
+              class="check-box">
+              {{film.title}}
+            </mat-checkbox>
+          </div>
+        </mat-expansion-panel>
+  
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Species </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div *ngFor="let species of filterOptions.species">
+            <mat-checkbox 
+              [checked]="filterChanges.species.has(species.name)" 
+              (change)="changes(species.name, 'species')" 
+              class="check-box">
+              {{species.name}}
+            </mat-checkbox>
+          </div>
+        </mat-expansion-panel>
+  
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Vehicle </mat-panel-title>
+          </mat-expansion-panel-header>
+          <section class="example-section">
+            <div *ngFor="let vehicle of filterOptions.vehicle">
+              <mat-checkbox 
+                [checked]="filterChanges.vehicle.has(vehicle.url)" 
+                (change)="changes(vehicle.url, 'vehicle')" 
+                class="check-box">
+                {{vehicle.name}}
+              </mat-checkbox>
+            </div>
+          </section>
+        </mat-expansion-panel>
+  
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Birth Year </mat-panel-title>
+          </mat-expansion-panel-header>
+          <section class="example-section">
+            <div *ngFor="let birth_year of filterOptions.birthYear">
+              <mat-checkbox 
+                [checked]="filterChanges.birthYear.has(birth_year)" 
+                (change)="changes(birth_year, 'birthYear')" 
+                class="check-box">
+                {{birth_year}}
+              </mat-checkbox>
+            </div>
+          </section>
+        </mat-expansion-panel>
+  
+      </mat-accordion>
+      <button class="btn-primary btn" (click)="applyFilters()">Apply Filter</button>
     </div>
-
-</div>
-<div *ngIf="!filter">
-
+  </div>
+  
+  <div *ngIf="!filter">
     <div class="character-details">
-        <p>Name: {{characterDetails.name}} </p>
-        <p>Birth year: {{characterDetails.birth_year}} </p>
-        <p>Gender: {{characterDetails.gender}} </p>
-        <p>height: {{characterDetails.height}}</p>
-        <p>Weight: {{characterDetails.mass}} </p>
-        <p>Created at :{{characterDetails.created | date:'dd/MM/YYYY'}} </p>
-        <p>Edited at : {{characterDetails.edited | date:'dd/MM/YYYY'}} </p>
-        <p>Hair color : {{characterDetails.hair_color}} </p>
-        <p>Eye color : {{characterDetails.eye_color}} </p>
-        <p>Skin color : {{characterDetails.skin_color}} </p>
-
+      <p>Name: {{characterDetails.name}}</p>
+      <p>Birth year: {{characterDetails.birth_year}}</p>
+      <p>Gender: {{characterDetails.gender}}</p>
+      <p>Height: {{characterDetails.height}}</p>
+      <p>Weight: {{characterDetails.mass}}</p>
+      <p>Created at: {{characterDetails.created | date: 'dd/MM/YYYY'}}</p>
+      <p>Edited at: {{characterDetails.edited | date: 'dd/MM/YYYY'}}</p>
+      <p>Hair color: {{characterDetails.hair_color}}</p>
+      <p>Eye color: {{characterDetails.eye_color}}</p>
+      <p>Skin color: {{characterDetails.skin_color}}</p>
     </div>
-</div>
+  </div>
+  

@@ -1,8 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { filterOptions, People } from 'src/app/models/people';
 import { StarWarsService } from 'src/app/services/star-wars.service';
+
+type FilterType = 'film' | 'species' | 'vehicle' | 'birthYear';
 
 @Component({
   selector: 'app-side-bar',
@@ -16,143 +18,108 @@ export class SideBarComponent implements OnInit {
     film: [],
     species: [],
     vehicle: [],
-    starShip: [],
-    birthYear: []
+    birthYear: [],
+    starShip: []
   };
-  peopleData: People[] = [];
-  filteredPeopleData: People[] = []; // Separate array for filtered data
+  peopleData: People[] = [];         // Original data
+  filteredPeopleData: People[] = []; // Data after filtering
 
-  constructor(private starWarsService: StarWarsService, private route: ActivatedRoute, private router: Router) { }
+  filterChanges: { [key in FilterType]: Set<string> } = {
+    film: new Set<string>(),
+    species: new Set<string>(),
+    vehicle: new Set<string>(),
+    birthYear: new Set<string>()
+  };
+
+  constructor(private starWarsService: StarWarsService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.router.events.pipe(
-      filter((event) => event instanceof NavigationStart)
-    ).subscribe((event: any) => {
-      if (event.url == '/') {
-        this.filter = true;
-        this.starWarsService.personDetails.next(null);
+    this.router.events.pipe(filter(event => event instanceof NavigationStart)).subscribe((event: any) => {
+      this.filter = event.url === '/';
+      if (!this.filter) {
+        this.starWarsService.personDetails.subscribe(result => this.characterDetails = result);
       } else {
-        this.filter = false;
-        this.starWarsService.personDetails.subscribe(result => {
-          this.characterDetails = result;
-        });
+        this.starWarsService.personDetails.next(null);
       }
     });
 
     this.starWarsService.people$.subscribe(data => {
-      this.peopleData = data; // Original data
-      this.filteredPeopleData = [...data]; // Initialize filtered data
+      this.peopleData = data;
+      this.filteredPeopleData = [...data];
     });
 
-    this.getAllMovies();
-    this.getAllSpecies();
-    this.getAllBirthYear();
-    this.getAllVehicles();
+    this.getAllFilters();
   }
 
-  getAllMovies() {
-    let url = 'https://swapi.dev/api/films/';
-    this.starWarsService.getItems(url).subscribe(response => {
-      this.filterOptions.film = [...response.results];
-    });
-  }
-  getAllVehicles() {
-    let url = 'https://swapi.dev/api/vehicles/';
-    this.starWarsService.getItems(url).subscribe(response => {
-      this.filterOptions.vehicle = [...response.results];
-    });
-  }
-
-  getAllSpecies() {
-    let url = 'https://swapi.dev/api/species/';
-    this.starWarsService.getItems(url).subscribe(response => {
-      this.filterOptions.species = [...response.results];
-    });
-  }
-
-  getAllBirthYear() {
-    let url = 'https://swapi.dev/api/people/';
-    this.starWarsService.getItems(url).subscribe(response => {
+  getAllFilters() {
+    const baseUrl = 'https://swapi.dev/api/';
+    this.starWarsService.getItems(`${baseUrl}films/`).subscribe(response => this.filterOptions.film = response.results);
+    this.starWarsService.getItems(`${baseUrl}vehicles/`).subscribe(response => this.filterOptions.vehicle = response.results);
+    this.starWarsService.getItems(`${baseUrl}species/`).subscribe(response => this.filterOptions.species = response.results);
+    this.starWarsService.getItems(`${baseUrl}people/`).subscribe(response => {
       this.filterOptions.birthYear = [...new Set(response.results.map((element: any) => element.birth_year))];
     });
   }
 
-  filterChanges: filterOptions = {
-    film: [],
-    species: [],
-    vehicle: [],
-    starShip: [],
-    birthYear: []
-  };
-
-  changes(change: string, type: string) {
-    const updateFilterArray = (filterArray: string[], value: string) => {
-      const index = filterArray.indexOf(value);
-      if (index === -1) {
-        filterArray.push(value);
-      } else {
-        filterArray.splice(index, 1);
-      }
-    };
-
-    switch (type) {
-      case 'film':
-        updateFilterArray(this.filterChanges.film, change);
-        break;
-      case 'species':
-        updateFilterArray(this.filterChanges.species, change);
-        break;
-      case 'vehicle':
-        updateFilterArray(this.filterChanges.vehicle, change);
-        break;
-      case 'starShip':
-        updateFilterArray(this.filterChanges.starShip, change);
-        break;
-      case 'birth_year':
-        updateFilterArray(this.filterChanges.birthYear, change);
-        break;
+  changes(change: string, type: FilterType) {
+    if (this.filterChanges[type].has(change)) {
+      this.filterChanges[type].delete(change);
+    } else {
+      this.filterChanges[type].add(change);
     }
   }
 
   applyFilters() {
-    // let data = this.peopleData;
+    console.log(this.peopleData,'jhvgu')
     this.filteredPeopleData = this.peopleData.filter(character => {
-      return this.filterByFilm(character) &&
-        this.filterBySpecies(character) &&
-        this.filterByVehicle(character) &&
-        this.filterByBirthYear(character);
+      return (
+        (this.filterChanges.film.size === 0 || Array.from(this.filterChanges.film).some(film => {character.films.includes(film)})) &&
+        (this.filterChanges.species.size === 0 || character.species.some(species => this.filterChanges.species.has(species))) &&
+        (this.filterChanges.vehicle.size === 0 || character.vehicles.some(vehicle => this.filterChanges.vehicle.has(vehicle))) &&
+        (this.filterChanges.birthYear.size === 0 || this.filterChanges.birthYear.has(character.birth_year))
+      );
     });
 
+    // Update the data in the service
+    this.starWarsService.updatePeople(this.filteredPeopleData);
 
-    console.log('Filtered Data:', this.filteredPeopleData);
+    // Reset filters and refresh the original data
+    this.resetFilters();
+
+    // Restore the original data for further filtering
+     this.starWarsService.getAllPeopleData().subscribe(response=>{
+      this.peopleData = response.results
+      this.peopleData.forEach((element: any) => {
+        if (element.species.length == 0) {
+          element.species[0] = 'Human';
+        } else {
+          element.species.forEach((speciesUrl: any, index: number) => {
+            this.starWarsService.getItems(speciesUrl).subscribe((species: any) => {
+              element.species[index] = species.name;
+              element.species = [...element.species];
+            });
+          });
+        }
+        if(element.films.length > 0){
+          element.films.forEach((filmUrl: any, index: number) => {
+            this.starWarsService.getItems(filmUrl).subscribe((films: any) => {
+              element.films[index] = films.title;
+              element.films = [...element.films];
+            });
+          });
+        }
+      });
+     })
+  }
+
+  resetFilters() {
     this.filterChanges = {
-      film: [],
-      species: [],
-      vehicle: [],
-      starShip: [],
-      birthYear: []
+      film: new Set<string>(),
+      species: new Set<string>(),
+      vehicle: new Set<string>(),
+      birthYear: new Set<string>()
     };
-    this.starWarsService.updatePeople(this.filteredPeopleData)
-  }
 
-  filterByFilm(character: People): boolean {
-    if (this.filterChanges.film.length === 0) return true;
-    return this.filterChanges.film.some(film => character.films.includes(film));
-  }
-
-  filterBySpecies(character: People): boolean {
-    if (this.filterChanges.species.length === 0) return true;
-    return character.species.some(species => this.filterChanges.species.includes(species));
-  }
-
-  filterByVehicle(character: People): boolean {
-    if (this.filterChanges.vehicle.length === 0) return true;
-    return character.vehicles.some(vehicle => this.filterChanges.vehicle.includes(vehicle));
-  }
-
-
-  filterByBirthYear(character: People): boolean {
-    if (this.filterChanges.birthYear.length === 0) return true;
-    return this.filterChanges.birthYear.includes(character.birth_year);
+    this.filteredPeopleData = [...this.peopleData];
   }
 }

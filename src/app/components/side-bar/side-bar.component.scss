@@ -6,3 +6,9 @@
 .check-box {
     display: block;
 }
+
+::ng-deep {
+    .mdc-form-field {
+        width: 100% !important;
+    }
+}

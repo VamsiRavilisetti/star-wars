@@ -3,7 +3,7 @@
         <h1 class="text-success fw-bold">FILMS</h1>
 
         <div class="row">
-            <div class="col-md-3" *ngFor="let film of filmData">
+            <div class="col-md-3 my-2 " *ngFor="let film of filmData">
                 <mat-card class="film-card " appearance="outlined">
                     <mat-card-header>
                         <mat-card-title>{{film?.title}}</mat-card-title>
@@ -21,7 +21,7 @@
     <div class="py-4" *ngIf="vehiclesData.length>0">
         <h1 class="text-success fw-bold">VEHICLES</h1>
         <div class="row">
-            <div class="col-md-3" *ngFor="let vehicle of vehiclesData">
+            <div class="col-md-3 my-2 " *ngFor="let vehicle of vehiclesData">
                 <mat-card class="film-card " appearance="outlined">
                     <mat-card-header>
                         <mat-card-title>{{vehicle?.name}}</mat-card-title>
@@ -40,7 +40,7 @@
     <div class="py-4" *ngIf="starshipsData.length >0">
         <h1 class="text-success fw-bold">STARSHIPS</h1>
         <div class="row">
-            <div class="col-md-3" *ngFor="let starship of starshipsData">
+            <div class="col-md-3 my-2 " *ngFor="let starship of starshipsData">
                 <mat-card class="film-card " appearance="outlined">
                     <mat-card-header>
                         <mat-card-title>{{starship?.name}}</mat-card-title>

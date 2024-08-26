@@ -1,18 +1,74 @@
-.film-card {
-    max-width: 300px;
-    padding: 0.5rem;
-    height: 100%;
+.page-details {
+    padding: 20px;
+
+    .films,
+    .py-4 {
+        margin-bottom: 30px;
+    }
+
+    h1.text-success {
+        color: #28a745;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .film-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        overflow: hidden;
+        transition: box-shadow 0.3s, transform 0.3s;
+
+        &:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .mat-card-header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 16px;
+
+            .mat-card-title {
+                font-size: 18px;
+                font-weight: 700;
+            }
+        }
+
+        .mat-card-content {
+            padding: 16px;
+
+            p {
+                margin: 8px 0;
+                font-size: 14px;
+                color: #333;
+            }
+
+
+        }
+    }
+
+    .overflow {
+        display: -webkit-box;
+        max-width: 100%;
+        margin: 0 auto;
+        -webkit-line-clamp: 7;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
 }
 
-.overflow {
+::ng-deep {
+    .mat-mdc-card-content {
+        height: 100%;
+    }
 
-    display: -webkit-box;
-    max-width: 100%;
-    margin: 0 auto;
-    -webkit-line-clamp: 7;
-    /* autoprefixer: off */
-    -webkit-box-orient: vertical;
-    /* autoprefixer: on */
-    overflow: hidden;
-    text-overflow: ellipsis;
+    .mat-mdc-card {
+        height: 100%;
+    }
 }

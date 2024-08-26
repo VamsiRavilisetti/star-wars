@@ -13,7 +13,7 @@ type FilterType = 'film' | 'species' | 'vehicle' | 'birthYear';
 })
 export class SideBarComponent implements OnInit {
   filter: boolean = true;
-  characterDetails!: People;
+  characterDetails:any;
   filterOptions: filterOptions = {
     film: [],
     species: [],
@@ -31,7 +31,7 @@ export class SideBarComponent implements OnInit {
     birthYear: new Set<string>()
   };
 
-  constructor(private starWarsService: StarWarsService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private starWarsService: StarWarsService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.router.events.pipe(filter(event => event instanceof NavigationStart)).subscribe((event: any) => {
@@ -47,7 +47,6 @@ export class SideBarComponent implements OnInit {
       this.peopleData = data;
       this.filteredPeopleData = [...data];
     });
-
     this.getAllFilters();
   }
 
@@ -68,29 +67,33 @@ export class SideBarComponent implements OnInit {
       this.filterChanges[type].add(change);
     }
   }
-
   applyFilters() {
-    console.log(this.peopleData,'jhvgu')
+    console.log(this.peopleData, 'original data');
+    console.log(this.filterChanges, 'filter selected changes');
+
     this.filteredPeopleData = this.peopleData.filter(character => {
-      return (
-        (this.filterChanges.film.size === 0 || Array.from(this.filterChanges.film).some(film => {character.films.includes(film)})) &&
-        (this.filterChanges.species.size === 0 || character.species.some(species => this.filterChanges.species.has(species))) &&
-        (this.filterChanges.vehicle.size === 0 || character.vehicles.some(vehicle => this.filterChanges.vehicle.has(vehicle))) &&
-        (this.filterChanges.birthYear.size === 0 || this.filterChanges.birthYear.has(character.birth_year))
+      const filmMatch = this.filterChanges.film.size === 0 || Array.from(this.filterChanges.film).some(selectedFilm =>
+        character.films.includes(selectedFilm)
       );
+      const speciesMatch = this.filterChanges.species.size === 0 || character.species.some(species => this.filterChanges.species.has(species));
+      const vehicleMatch = this.filterChanges.vehicle.size === 0 || character.vehicles.some(vehicle => this.filterChanges.vehicle.has(vehicle));
+      const birthYearMatch = this.filterChanges.birthYear.size === 0 || this.filterChanges.birthYear.has(character.birth_year);
+      return filmMatch && speciesMatch && vehicleMatch && birthYearMatch;
     });
+
+    console.log(this.filteredPeopleData, 'result after filtering');
 
     // Update the data in the service
     this.starWarsService.updatePeople(this.filteredPeopleData);
 
-    // Reset filters and refresh the original data
+    // Reset the checkbox selections and filters
     this.resetFilters();
 
     // Restore the original data for further filtering
-     this.starWarsService.getAllPeopleData().subscribe(response=>{
-      this.peopleData = response.results
+    this.starWarsService.getAllPeopleData().subscribe(response => {
+      this.peopleData = response.results;
       this.peopleData.forEach((element: any) => {
-        if (element.species.length == 0) {
+        if (element.species.length === 0) {
           element.species[0] = 'Human';
         } else {
           element.species.forEach((speciesUrl: any, index: number) => {
@@ -100,17 +103,10 @@ export class SideBarComponent implements OnInit {
             });
           });
         }
-        if(element.films.length > 0){
-          element.films.forEach((filmUrl: any, index: number) => {
-            this.starWarsService.getItems(filmUrl).subscribe((films: any) => {
-              element.films[index] = films.title;
-              element.films = [...element.films];
-            });
-          });
-        }
       });
-     })
+    });
   }
+
 
   resetFilters() {
     this.filterChanges = {

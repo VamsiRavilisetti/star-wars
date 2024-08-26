@@ -1,14 +1,109 @@
 .character-details {
-    border: solid 1px grey;
-    padding: 1rem;
-}
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  max-width: 600px;
+  font-family: Arial, sans-serif;
 
-.check-box {
-    display: block;
-}
+  p {
+    font-size: 16px;
+    margin: 8px 0;
+    color: #333;
+    line-height: 1.5;
 
-::ng-deep {
-    .mdc-form-field {
-        width: 100% !important;
+    &:first-of-type {
+      font-size: 20px;
+      font-weight: bold;
+      color: #007BFF;
     }
+  }
+}
+
+.filters {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  max-width: 600px;
+
+  h2 {
+    margin-bottom: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    color: #28a745;
+  }
+
+  .mat-expansion-panel-header {
+    background-color: #f1f1f1;
+    font-weight: bold;
+    color: #007BFF;
+  }
+
+  .check-box {
+    margin-left: 16px;
+    margin-bottom: 8px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    color: #333;
+
+    .mat-checkbox-layout {
+      align-items: center;
+    }
+
+    .mat-checkbox-label {
+      font-size: 16px;
+    }
+  }
+
+  .example-section {
+    padding: 10px 0;
+  }
+
+  .btn {
+    margin-top: 20px;
+    background-color: #007BFF;
+    border: none;
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+}
+
+.mat-accordion {
+  .mat-expansion-panel {
+    margin-bottom: 16px;
+
+    .mat-expansion-panel-header {
+      padding: 0 24px;
+      border-bottom: 1px solid #e0e0e0;
+
+      .mat-panel-title {
+        font-size: 18px;
+        font-weight: 500;
+      }
+    }
+
+    .mat-expansion-panel-content {
+      padding: 16px;
+    }
+  }
+
+}
+::ng-deep {
+  .mat-mdc-checkbox {
+    width: 100% !important;
+  }
+  .mdc-form-field{
+    width: 100% !important;
+  }
 }
